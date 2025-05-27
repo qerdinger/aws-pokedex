@@ -1,3 +1,4 @@
 target
 pokemonLambda/PokemonLambda/target
 pokemonLambda/.aws-sam
+.DS_Store

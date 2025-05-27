@@ -1,0 +1,3 @@
+[submodule "aws-pokedex-ui"]
+	path = aws-pokedex-ui
+	url = https://github.com/qerdinger/aws-pokedex-ui.git
