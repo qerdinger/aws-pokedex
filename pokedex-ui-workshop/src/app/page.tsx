@@ -1,27 +1,50 @@
-import PokeNavBarComp from "./components/pokeNavBarComp";
-import PokemonsComp from "./components/pokemonsComp";
+'use client'
+import PokemonsComp from "@/app/components/pokemonsComp";
+import PokeNavBar from "@/app/components/pokeNavBarComp";
+import PokemonCard from "@/app/model/pokemonCard";
+import { useEffect, useState } from "react";
+import { Container, Row, Spinner } from "react-bootstrap";
+
 
 export default function Home() {
- const testData = [
-   {
-     pokemonNumber: 1,
-     pokemonName:"poke1",
-     pokemonType:["Water"],
-     mainImage: "https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/001.png"
-   },
-   {
-     pokemonNumber: 2,
-     pokemonName:"poke2",
-     pokemonType:["Fire"],     
-     mainImage: "https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/002.png"
-   }
- ];
+
+
+ const [pokemons, setPokemons] = useState<PokemonCard[]>();
+
+
+ useEffect(() => {
+   const fetchData = async () => {
+     const resp = await fetch('/api/pokemon');
+     if (resp.ok) {
+       const pokemons: PokemonCard[] = (await resp.json()).items;
+       console.log(pokemons);
+       setPokemons(pokemons);
+     }
+   };
+
+
+   fetchData()
+     // Making sure to log errors on the console
+     .catch(error => {
+       console.error(error);
+     });
+ }, []);
 
 
  return (
    <>
-     <PokeNavBarComp></PokeNavBarComp>
-     <PokemonsComp pokemons={testData}></PokemonsComp>
+     <PokeNavBar></PokeNavBar>
+     {pokemons ?
+       <PokemonsComp pokemons={pokemons}></PokemonsComp> :
+       <Container>
+         <Row className="justify-content-md-center p-2">
+           <Spinner className='p-2' animation='border' role='status' />
+         </Row>
+         <Row className="justify-content-md-center p-2">
+           Loading Pokémons...
+         </Row>
+       </Container>
+     }
    </>
  );
 }
